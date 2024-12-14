@@ -57,7 +57,7 @@ const HomeScreen = () => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <InsetShadowBox
             style={{
-              marginHorizontal: 18,
+              marginHorizontal: 8,
             }}
             color={color}
           />
