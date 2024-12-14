@@ -6,14 +6,13 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
-  Dimensions,
   StyleSheet,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {useAuth} from '../contexts/AuthContext';
-import {useNavigation} from '@react-navigation/native';
-
-const {height, width} = Dimensions.get('window');
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import InsetShadowBox from '../components/InsetShadowBox';
+import { useIndicator } from '../contexts/IndicatorContext';
 
 const HomeScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,6 +21,8 @@ const HomeScreen = () => {
 
   const {logout, userName} = useAuth();
 
+  const { color, changeToGreen } = useIndicator()
+
   const handleLogout = () => {
     logout();
     navigation.reset({
@@ -29,6 +30,17 @@ const HomeScreen = () => {
       routes: [{name: 'Front'}],
     });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const timer = setTimeout(() => {
+        changeToGreen();
+      }, 2000); 
+
+      return () => clearTimeout(timer);
+    }, [changeToGreen])
+  );
+
 
   return (
     <View style={{flex: 1}}>
@@ -42,12 +54,20 @@ const HomeScreen = () => {
           style={styles.logo}
           source={require('../assets/icons/bca-mobile.png')}
         />
-        <TouchableOpacity onPress={handleLogout}>
-          <Image
-            style={styles.logoutIcon}
-            source={require('../assets/icons/logout.png')}
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <InsetShadowBox
+            style={{
+              marginHorizontal: 24,
+            }}
+            color={color}
           />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={handleLogout}>
+            <Image
+              style={styles.logoutIcon}
+              source={require('../assets/icons/logout.png')}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <View
         style={{
@@ -58,7 +78,14 @@ const HomeScreen = () => {
           <Text style={styles.greetingText}>Selamat datang,</Text>
           <Text style={styles.greetingName}>{userName ? userName : '-'}</Text>
         </View>
-        <View style={{flex: 5, paddingHorizontal: 16}}>
+        <TouchableOpacity activeOpacity={0.8} style={{flex: 1}}>
+          <Image
+            style={{flex: 1, width: '100%', height: '100%'}}
+            resizeMode="contain"
+            source={require('../assets/home/event.png')}
+          />
+        </TouchableOpacity>
+        <View style={{flex: 4, paddingHorizontal: 16}}>
           <View style={styles.row}>
             <TouchableOpacity onPress={() => navigation.navigate('M-Info')}>
               <View style={styles.menuItem}>
@@ -115,10 +142,20 @@ const HomeScreen = () => {
               <View style={styles.menuItem}>
                 <ImageBackground
                   style={styles.menuIcon}
+                  source={require('../assets/home/bca-keyboard.png')}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <View style={styles.menuItem}>
+                <ImageBackground
+                  style={styles.menuIcon}
                   source={require('../assets/home/flazz.png')}
                 />
               </View>
             </TouchableOpacity>
+          </View>
+          <View style={styles.row}>
             <TouchableOpacity>
               <View style={styles.menuItem}>
                 <ImageBackground
@@ -127,9 +164,23 @@ const HomeScreen = () => {
                 />
               </View>
             </TouchableOpacity>
-          </View>
-          <View style={styles.row}>
             <TouchableOpacity>
+              <View style={styles.menuItem}>
+                <ImageBackground
+                  style={styles.menuIcon}
+                  source={require('../assets/home/lifestyle.png')}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity disabled style={{opacity: 0}}>
+              <View style={styles.menuItem}>
+                <ImageBackground
+                  style={styles.menuIcon}
+                  source={require('../assets/home/bagi-bagi.png')}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity disabled style={{opacity: 0}}>
               <View style={styles.menuItem}>
                 <ImageBackground
                   style={styles.menuIcon}

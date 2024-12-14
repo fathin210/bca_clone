@@ -13,6 +13,8 @@ import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAuth} from '../contexts/AuthContext';
 import moment from 'moment';
+import InsetShadowBox from '../components/InsetShadowBox';
+import {useIndicator} from '../contexts/IndicatorContext';
 
 const {width, height} = Dimensions.get('window');
 
@@ -24,15 +26,38 @@ const MInfoScreen = () => {
 
   const {saldo, noRekening, formatSaldo} = useAuth();
 
+  const {color} = useIndicator();
+
   return (
     <>
       <View style={styles.container}>
         {/* Header */}
-        <View style={{padding: 16, backgroundColor: '#F9F9F9'}}>
-          <Text
-            style={{...styles.headerText, fontSize: 20, textAlign: 'center'}}>
-            m-Info
-          </Text>
+        <View
+          style={{
+            padding: 16,
+            backgroundColor: '#F9F9F9',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                ...styles.headerText,
+                fontSize: 20,
+                textAlign: 'center',
+                width: '50%',
+              }}>
+              m-Info
+            </Text>
+            <InsetShadowBox color={color} />
+          </View>
         </View>
 
         {/* Menu List */}

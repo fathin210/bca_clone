@@ -1,11 +1,14 @@
 import React from 'react';
 import { AuthProvider } from './AuthContext';
+import { IndicatorProvider } from './IndicatorContext';
 
 const AppProviders = ({ children }) => {
   return (
-    <AuthProvider>
-      {children}
-    </AuthProvider>
+    <IndicatorProvider>
+      <AuthProvider>
+        {children}
+      </AuthProvider>
+    </IndicatorProvider>
   );
 };
 

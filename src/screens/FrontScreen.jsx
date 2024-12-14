@@ -8,7 +8,6 @@ import {
   Modal,
   TextInput,
   KeyboardAvoidingView,
-  Platform,
   StatusBar,
   useColorScheme,
   ScrollView,
@@ -18,6 +17,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../contexts/AuthContext';
+import FastImage from 'react-native-fast-image';
 
 const {width, height} = Dimensions.get('window'); // Mendapatkan dimensi layar
 
@@ -135,12 +135,11 @@ const FrontScreen = () => {
               ))}
             </View>
           </View>
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>
-              Selamat Datang di
-              <Text style={styles.footerTextItalic}> BCA mobile</Text>
-            </Text>
-          </View>
+          <FastImage
+            style={styles.image}
+            source={require('../assets/front/animated-welcome.gif')}
+            resizeMode={FastImage.resizeMode.cover}
+          />
         </ImageBackground>
       </ScrollView>
 
@@ -259,6 +258,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
     height: 57,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   additionalMenuText: {
     color: 'white',
@@ -266,19 +267,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
   },
-  footer: {
-    backgroundColor: 'white',
-    height: height * 0.1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  footerText: {
-    color: '#125A96',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  footerTextItalic: {
-    fontStyle: 'italic',
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   modalBackground: {
     flex: 1,
