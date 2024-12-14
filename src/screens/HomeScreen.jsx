@@ -8,11 +8,11 @@ import {
   ImageBackground,
   StyleSheet,
 } from 'react-native';
-import React, { useCallback } from 'react';
+import React, {useCallback} from 'react';
 import {useAuth} from '../contexts/AuthContext';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import InsetShadowBox from '../components/InsetShadowBox';
-import { useIndicator } from '../contexts/IndicatorContext';
+import {useIndicator} from '../contexts/IndicatorContext';
 
 const HomeScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,7 +21,7 @@ const HomeScreen = () => {
 
   const {logout, userName} = useAuth();
 
-  const { color, changeToGreen } = useIndicator()
+  const {color, changeToGreen} = useIndicator();
 
   const handleLogout = () => {
     logout();
@@ -35,12 +35,11 @@ const HomeScreen = () => {
     useCallback(() => {
       const timer = setTimeout(() => {
         changeToGreen();
-      }, 2000); 
+      }, 2000);
 
       return () => clearTimeout(timer);
-    }, [changeToGreen])
+    }, [changeToGreen]),
   );
-
 
   return (
     <View style={{flex: 1}}>
@@ -224,6 +223,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#002344',
     justifyContent: 'center',
     padding: 24,
+    marginBottom: '-10%'
   },
   greetingText: {
     fontSize: 18,
