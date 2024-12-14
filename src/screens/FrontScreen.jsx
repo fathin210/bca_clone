@@ -185,7 +185,10 @@ const FrontScreen = () => {
 
                     if (isLoginSuccessful) {
                       closeModal();
-                      navigation.navigate('Home');
+                      navigation.reset({
+                        index: 0,
+                        routes: [{name: 'Home'}],
+                      });
                     } else {
                     }
                   }}>
