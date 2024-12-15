@@ -22,8 +22,7 @@ const HomeScreen = () => {
 
   const {logout, userName} = useAuth();
 
-  const {color, getRandomColor} = useIndicator();
-  console.log('🚀 ~ HomeScreen ~ color:', color);
+  const {color} = useIndicator();
 
   const handleLogout = () => {
     logout();

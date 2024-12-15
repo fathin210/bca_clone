@@ -18,6 +18,71 @@ import {useIndicator} from '../contexts/IndicatorContext';
 
 const {width, height} = Dimensions.get('window');
 
+const masterMenu = [
+  {
+    label: 'Info Saldo',
+    type: 'menu',
+  },
+  {
+    label: 'Mutasi Rekening',
+    type: 'menu',
+  },
+  {
+    label: 'Rekening Deposito',
+    type: 'menu',
+  },
+  {
+    label: 'Info Reward BCA',
+    type: 'menu',
+  },
+  {
+    label: 'Info Reksadana',
+    type: 'section',
+    submenus: [
+      {
+        label: 'NAB Reksadana',
+      },
+      {
+        label: 'Saldo Reksadana',
+      },
+    ],
+  },
+  {
+    label: 'Info Kurs',
+    type: 'menu',
+  },
+  {
+    label: 'Info RDN',
+    type: 'section',
+    submenus: [
+      {
+        label: 'Info Saldo',
+      },
+      {
+        label: 'Mutasi Rekening',
+      },
+    ],
+  },
+  {
+    label: 'Info KPR',
+    type: 'section',
+    submenus: [
+      {
+        label: 'Inquiry Pinjaman',
+      },
+    ],
+  },
+  {
+    label: 'Info Kartu Kredit',
+    type: 'section',
+    submenus: [
+      {
+        label: 'Saldo',
+      },
+    ],
+  },
+];
+
 const MInfoScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -64,87 +129,79 @@ const MInfoScreen = () => {
         <View style={styles.menuWrapper}>
           <View
             style={{
-              backgroundColor: 'red',
               overflow: 'hidden',
               borderRadius: 6,
             }}>
-            <View style={styles.header}>
-              <Image
-                source={require('../assets/minfo/m-info.png')}
-                style={styles.headerImage}
-              />
-              <Text style={styles.headerText}>m-Info</Text>
-            </View>
-            <ScrollView contentContainerStyle={styles.menuContainer}>
-              {/* Main Menus */}
-              {[
-                'Info Saldo',
-                'Mutasi Rekening',
-                'Rekening Deposito',
-                'Info Reward BCA',
-                'Info Reksadana',
-              ].map((item, index) => {
-                const backgroundColor =
-                  item === 'Info Reksadana' ? '#EBEBEB' : 'white';
-
-                const isDisabled = item !== 'Info Saldo';
-
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={[styles.menuItem, {backgroundColor}]}
-                    onPress={openModal}
-                    activeOpacity={0.7}
-                    disabled={isDisabled}>
-                    <Text style={styles.menuText}>{item}</Text>
-                    {item !== 'Info Reksadana' && item !== 'Info RDN' && (
-                      <Image
-                        source={require('../assets/icons/next-blue.png')}
-                        style={styles.iconNext}
-                      />
-                    )}
-                  </TouchableOpacity>
-                );
-              })}
-
-              {/* Sub-menus under "Info Reksadana" */}
-              <View style={styles.subMenuContainer}>
-                {['NAB Reksadana', 'Saldo Reksadana'].map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={styles.subMenuItem}
-                    onPress={() => handlePress(item)}>
-                    <Text style={styles.subMenuText}>{item}</Text>
-                    <Image
-                      source={require('../assets/icons/next-blue.png')}
-                      style={styles.iconNext}
-                    />
-                  </TouchableOpacity>
-                ))}
+            <ScrollView
+              contentContainerStyle={styles.menuContainer}
+              overScrollMode='never'
+              stickyHeaderIndices={[0]}>
+              <View style={styles.header}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    source={require('../assets/minfo/m-info.png')}
+                    style={styles.headerImage}
+                  />
+                  <Text style={styles.headerText}>m-Info</Text>
+                </View>
               </View>
-
-              {/* Additional Menus */}
-              {['Info Kurs', 'Info RDN'].map((item, index) => {
-                const backgroundColor =
-                  item === 'Info RDN' ? '#EBEBEB' : 'white';
-
-                const isDisabled = item === 'Info RDN';
+              {masterMenu.map(item => {
+                const sectionStyle = {
+                  container: {
+                    backgroundColor: '#555555',
+                    minHeight: 24,
+                    paddingHorizontal: 8,
+                    paddingVertical: 6,
+                  },
+                  font: {
+                    color: 'white',
+                    fontSize: 12,
+                  },
+                };
 
                 return (
-                  <TouchableOpacity
-                    key={index}
-                    style={[styles.menuItem, {backgroundColor}]}
-                    onPress={() => handlePress(item)}
-                    activeOpacity={0.7}
-                    disabled={isDisabled}>
-                    <Text style={styles.menuText}>{item}</Text>
-                    {item !== 'Info Reksadana' && item !== 'Info RDN' && (
-                      <Image
-                        source={require('../assets/icons/next-blue.png')}
-                        style={styles.iconNext}
-                      />
-                    )}
-                  </TouchableOpacity>
+                  <>
+                    <TouchableOpacity
+                      key={item.label}
+                      style={[
+                        styles.menuItem,
+                        item.type === 'section' && sectionStyle.container,
+                      ]}
+                      onPress={() => item.label === 'Info Saldo' && openModal}
+                      activeOpacity={0.7}>
+                      <Text
+                        style={{
+                          ...styles.menuText,
+                          ...(item.type === 'section' ? sectionStyle.font : {}),
+                        }}>
+                        {item.label}
+                      </Text>
+                      {item.type === 'menu' && (
+                        <Image
+                          source={require('../assets/icons/next-blue.png')}
+                          style={styles.iconNext}
+                        />
+                      )}
+                    </TouchableOpacity>
+                    {item.type === 'section' &&
+                      Array.isArray(item?.submenus) && (
+                        <View style={styles.subMenuContainer}>
+                          {item.submenus.map(submenu => (
+                            <TouchableOpacity
+                              key={submenu.label}
+                              style={styles.subMenuItem}>
+                              <Text style={styles.subMenuText}>
+                                {submenu.label}
+                              </Text>
+                              <Image
+                                source={require('../assets/icons/next-blue.png')}
+                                style={styles.iconNext}
+                              />
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      )}
+                  </>
                 );
               })}
             </ScrollView>
@@ -181,7 +238,7 @@ const MInfoScreen = () => {
             </View>
             <View style={{flex: 1}}>
               <View style={{marginBottom: 24}}>
-                <Text>m-info:</Text>
+                <Text>m-Info:</Text>
                 <Text>{moment(Date.now()).format('DD/MM/YYYY HH:mm:ss')}</Text>
               </View>
               <Text>{`${noRekening ? noRekening : 'REKENING TIDAK DITEMUKAN'} ${
@@ -209,11 +266,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#002344',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#F9F9F9',
-    height: height * 0.1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
   headerImage: {
     width: 65,
@@ -231,13 +286,13 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     backgroundColor: 'white',
-    paddingVertical: 8,
   },
   menuItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    height: 40,
+    // paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
@@ -254,7 +309,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
+    height: 30,
+    // paddingVertical: 8,
     paddingRight: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
@@ -264,9 +320,8 @@ const styles = StyleSheet.create({
     color: '#005BAC',
   },
   iconNext: {
-    width: 20,
-    height: 20,
-    tintColor: '#005BAC',
+    width: 12,
+    height: 12,
     resizeMode: 'contain',
   },
   footer: {
