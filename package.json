@@ -19,7 +19,8 @@
     "react-native-fast-image": "^8.6.3",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-safe-area-context": "^5.0.0",
-    "react-native-screens": "^4.3.0"
+    "react-native-screens": "^4.3.0",
+    "react-native-svg": "^15.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

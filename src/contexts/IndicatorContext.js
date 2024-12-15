@@ -1,9 +1,13 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 
 const IndicatorContext = createContext();
 
 export const IndicatorProvider = ({ children }) => {
-  const getRandomColor = () => (Math.random() < 0.5 ? 'red' : '#1D64E1');
+  const getRandomColor = () => {
+    const colors = ['red', '#1D64E1', '#95D629'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+
   const [color, setColor] = useState(getRandomColor);
 
   const changeToGreen = () => {
@@ -12,7 +16,15 @@ export const IndicatorProvider = ({ children }) => {
     }
   };
 
-  const value = { color, setColor, changeToGreen };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setColor(getRandomColor());
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const value = { color, setColor, changeToGreen, getRandomColor };
 
   return (
     <IndicatorContext.Provider value={value}>

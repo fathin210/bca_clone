@@ -8,11 +8,12 @@ import {
   ImageBackground,
   StyleSheet,
 } from 'react-native';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useAuth} from '../contexts/AuthContext';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import InsetShadowBox from '../components/InsetShadowBox';
 import {useIndicator} from '../contexts/IndicatorContext';
+import SharpCornerRoundedSideBox from '../components/SharpCornerRoundedSideBox';
 
 const HomeScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,7 +22,8 @@ const HomeScreen = () => {
 
   const {logout, userName} = useAuth();
 
-  const {color, changeToGreen} = useIndicator();
+  const {color, getRandomColor} = useIndicator();
+  console.log('🚀 ~ HomeScreen ~ color:', color);
 
   const handleLogout = () => {
     logout();
@@ -30,16 +32,6 @@ const HomeScreen = () => {
       routes: [{name: 'Front'}],
     });
   };
-
-  useFocusEffect(
-    useCallback(() => {
-      const timer = setTimeout(() => {
-        changeToGreen();
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }, [changeToGreen]),
-  );
 
   return (
     <View style={{flex: 1}}>
@@ -86,107 +78,60 @@ const HomeScreen = () => {
         </TouchableOpacity>
         <View style={{flex: 4, paddingHorizontal: 16}}>
           <View style={styles.row}>
-            <TouchableOpacity onPress={() => navigation.navigate('M-Info')}>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/m-info.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Change Saldo')}>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/m-transfer.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/m-payment.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/m-commerce.png')}
-                />
-              </View>
-            </TouchableOpacity>
+            <MenuItem
+              label="m-Info"
+              onPress={() => navigation.navigate('M-Info')}
+              imageUri={require('../assets/home/m-info.png')}
+            />
+            <MenuItem
+              label="m-Transfer"
+              onPress={() => navigation.navigate('Change Saldo')}
+              imageUri={require('../assets/home/m-transfer.png')}
+            />
+            <MenuItem
+              label="m-Payment"
+              imageUri={require('../assets/home/m-payment.png')}
+            />
+            <MenuItem
+              label="m-Commerce"
+              imageUri={require('../assets/home/m-commerce.png')}
+            />
           </View>
           <View style={styles.row}>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/cardless.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/m-admin.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/bca-keyboard.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/flazz.png')}
-                />
-              </View>
-            </TouchableOpacity>
+            <MenuItem
+              label="Cardless"
+              imageUri={require('../assets/home/cardless.png')}
+            />
+            <MenuItem
+              label="m-Admin"
+              imageUri={require('../assets/home/m-admin.png')}
+            />
+            <MenuItem
+              label="BCA Keyboard"
+              imageUri={require('../assets/home/bca-keyboard.png')}
+            />
+            <MenuItem
+              label="Flazz"
+              imageUri={require('../assets/home/flazz.png')}
+            />
           </View>
           <View style={styles.row}>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/bagi-bagi.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/lifestyle.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity disabled style={{opacity: 0}}>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/bagi-bagi.png')}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity disabled style={{opacity: 0}}>
-              <View style={styles.menuItem}>
-                <ImageBackground
-                  style={styles.menuIcon}
-                  source={require('../assets/home/lifestyle.png')}
-                />
-              </View>
-            </TouchableOpacity>
+            <MenuItem
+              label="BagiBagi"
+              imageUri={require('../assets/home/bagi-bagi.png')}
+            />
+            <MenuItem
+              label="Lifestyle"
+              imageUri={require('../assets/home/lifestyle.png')}
+            />
+            <MenuItem
+              label="Lifestyle"
+              imageUri={require('../assets/home/lifestyle.png')}
+            />
+            <MenuItem
+              label="Lifestyle"
+              imageUri={require('../assets/home/lifestyle.png')}
+            />
           </View>
         </View>
         <View style={{flex: 1, width: '100%', backgroundColor: '#F1F1F1'}}>
@@ -198,6 +143,24 @@ const HomeScreen = () => {
         </View>
       </View>
     </View>
+  );
+};
+
+const MenuItem = ({label = '', imageUri, ...props}) => {
+  return (
+    <TouchableOpacity style={{flex: 1}} {...props}>
+      <View style={{justifyContent: 'center', alignItems: 'center', gap: 8}}>
+        <SharpCornerRoundedSideBox
+          height={60}
+          sideRadius={10}
+          fill="#007AFF"
+          imageUri={imageUri}
+        />
+        <Text style={{textAlign: 'center', color: '#BDD7EE', fontSize: 10}}>
+          {label}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -223,7 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#002344',
     justifyContent: 'center',
     padding: 24,
-    marginBottom: '-10%'
+    marginBottom: '-10%',
   },
   greetingText: {
     fontSize: 18,
@@ -266,6 +229,25 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 5,
     alignSelf: 'center',
+  },
+  menuItemContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#001A33',
+  },
+  shape: {
+    width: 100,
+    height: 100,
+    // backgroundColor: '#007AFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  innerContent: {
+    flex: 1,
+    margin: 10,
+    backgroundColor: '#005BA1',
+    borderRadius: 8,
   },
 });
 

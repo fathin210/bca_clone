@@ -12,9 +12,7 @@ const styles = StyleSheet.create({
   container: {
     width: 16,
     height: 16,
-    borderTopWidth: 2,
-    borderTopColor: '#A2B187',
-    borderRadius: 4,
+    borderRadius: 3,
     overflow: 'hidden', // Penting untuk membuat efek inset
   },
 });
