@@ -8,21 +8,13 @@ export const IndicatorProvider = ({ children }) => {
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
-  const [color, setColor] = useState(getRandomColor);
+  const [color, setColor] = useState('#1D64E1');
 
   const changeToGreen = () => {
     if (color === 'red' || color === '#1D64E1') {
       setColor('#95D629');
     }
   };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setColor(getRandomColor());
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const value = { color, setColor, changeToGreen, getRandomColor };
 

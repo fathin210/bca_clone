@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Modal,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useAuth} from '../contexts/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 import InsetShadowBox from '../components/InsetShadowBox';
@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
   const {logout, userName} = useAuth();
 
-  const {color} = useIndicator();
+  const {color, changeToGreen} = useIndicator();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -36,6 +36,14 @@ const HomeScreen = () => {
       routes: [{name: 'Front'}],
     });
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      changeToGreen()
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <>
@@ -128,14 +136,18 @@ const HomeScreen = () => {
               <MenuItem
                 label="Lifestyle"
                 imageUri={require('../assets/home/lifestyle.png')}
-              />
+                />
               <MenuItem
                 label="Lifestyle"
                 imageUri={require('../assets/home/lifestyle.png')}
-              />
+                disabled
+                style={{opacity: 0}}
+                />
               <MenuItem
                 label="Lifestyle"
                 imageUri={require('../assets/home/lifestyle.png')}
+                disabled
+                style={{opacity: 0}}
               />
             </View>
           </View>
@@ -191,7 +203,7 @@ const HomeScreen = () => {
 
 const MenuItem = ({label = '', imageUri, ...props}) => {
   return (
-    <TouchableOpacity style={{flex: 1}} {...props}>
+    <TouchableOpacity {...props} style={{flex: 1, ...props.style}} >
       <View style={{justifyContent: 'center', alignItems: 'center', gap: 8}}>
         <SharpCornerRoundedSideBox
           height={60}

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
+import { useIndicator } from './IndicatorContext';
 
 // AuthContext
 export const AuthContext = createContext();
@@ -10,32 +11,34 @@ export const LockContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
-  const [saldo, setSaldo] = useState(0);
-  const [userName, setUserName] = useState('');
+  const [saldo, setSaldo] = useState(10000000);
+  const [userName, setUserName] = useState('Fulan');
   const [userPin, setUserPin] = useState('pokermember');
-  const [noRekening, setNoRekening] = useState('');
+  const [noRekening, setNoRekening] = useState('1234567');
   const [loading, setLoading] = useState(true);
 
   const [isLocked, setIsLocked] = useState(false);
   const [limitDate, setLimitDate] = useState(new Date());
 
+  const { setColor } = useIndicator()
+
   // Load user data from AsyncStorage
   const loadUserData = async () => {
     try {
+      setColor("#1D64E1")
       const loginStatus = await AsyncStorage.getItem('isLogin');
-      setIsLogin(loginStatus === 'true');
+      const storedSaldo = await AsyncStorage.getItem('saldo');
+      const storedUserName = await AsyncStorage.getItem('userName');
+      const storedUserPin = await AsyncStorage.getItem('userPin');
+      const storedNoRekening = await AsyncStorage.getItem('noRekening');
+      const storedLimitDate = await AsyncStorage.getItem('limitDate');
 
-      if (loginStatus === 'true') {
-        const storedSaldo = await AsyncStorage.getItem('saldo');
-        const storedUserName = await AsyncStorage.getItem('userName');
-        const storedUserPin = await AsyncStorage.getItem('userPin');
-        const storedNoRekening = await AsyncStorage.getItem('noRekening');
-
-        if (storedSaldo !== null) setSaldo(parseFloat(storedSaldo));
-        if (storedUserName !== null) setUserName(storedUserName);
-        if (storedUserPin !== null) setUserPin(storedUserPin);
-        if (storedNoRekening !== null) setNoRekening(storedNoRekening);
-      }
+      if (loginStatus !== null) setIsLogin(loginStatus === 'true');
+      if (storedSaldo !== null) setSaldo(parseFloat(storedSaldo));
+      if (storedUserName !== null) setUserName(storedUserName);
+      if (storedUserPin !== null) setUserPin(storedUserPin);
+      if (storedNoRekening !== null) setNoRekening(storedNoRekening);
+      if (storedLimitDate !== null) setLimitDate(new Date(storedLimitDate));
     } catch (error) {
       console.error('Error loading data from AsyncStorage', error);
     } finally {
@@ -77,6 +80,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await AsyncStorage.setItem('isLogin', 'false');
     setIsLogin(false);
+    setColor("#1D64E1")
   };
 
   // Update saldo
@@ -128,13 +132,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (isLocked) {
-      logout()
+      logout();
     }
-  }, [isLocked])
+  }, [isLocked]);
 
   const setLockDate = async (date) => {
     setLimitDate(date);
-    await AsyncStorage.setItem('limitDate', moment(date).toString());
+    try {
+      await AsyncStorage.setItem('limitDate', date.toISOString());
+    } catch (error) {
+      console.error('Error saving limitDate to AsyncStorage', error);
+    }
   };
 
   return (

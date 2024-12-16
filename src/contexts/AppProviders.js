@@ -4,11 +4,11 @@ import { IndicatorProvider } from './IndicatorContext';
 
 const AppProviders = ({ children }) => {
   return (
-    <AuthProvider>
-      <IndicatorProvider>
+    <IndicatorProvider>
+      <AuthProvider>
         {children}
-      </IndicatorProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </IndicatorProvider>
   );
 };
 
