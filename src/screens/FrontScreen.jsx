@@ -16,7 +16,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
-import {useAuth} from '../contexts/AuthContext';
+import {useAuth, useLock} from '../contexts/AuthContext';
 import FastImage from 'react-native-fast-image';
 
 const {width, height} = Dimensions.get('window'); // Mendapatkan dimensi layar

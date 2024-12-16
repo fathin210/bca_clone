@@ -22,62 +22,77 @@ const masterMenu = [
   {
     label: 'Info Saldo',
     type: 'menu',
+    key: 'info_saldo_rekening',
   },
   {
     label: 'Mutasi Rekening',
     type: 'menu',
+    key: 'mutasi_rekening',
   },
   {
     label: 'Rekening Deposito',
     type: 'menu',
+    key: 'deposito_rekening',
   },
   {
     label: 'Info Reward BCA',
     type: 'menu',
+    key: 'reward_bca',
   },
   {
     label: 'Info Reksadana',
     type: 'section',
+    key: 'reksadana',
     submenus: [
       {
         label: 'NAB Reksadana',
+        key: 'nab_reksadana',
       },
       {
         label: 'Saldo Reksadana',
+        key: 'saldo_reksadana',
       },
     ],
   },
   {
     label: 'Info Kurs',
     type: 'menu',
+    key: 'info_kurs',
   },
   {
     label: 'Info RDN',
     type: 'section',
+    key: 'info_rdn',
     submenus: [
       {
         label: 'Info Saldo',
+        key: 'saldo_rdn',
       },
       {
         label: 'Mutasi Rekening',
+        key: 'mutasi_rdn',
       },
     ],
   },
   {
     label: 'Info KPR',
     type: 'section',
+    key: 'info_kpr',
     submenus: [
       {
         label: 'Inquiry Pinjaman',
+        key: 'pinjaman_kpr',
       },
     ],
   },
   {
     label: 'Info Kartu Kredit',
     type: 'section',
+    key: 'info_kartu_kredit',
     submenus: [
       {
         label: 'Saldo',
+        key: 'saldo_kartu_kredit',
       },
     ],
   },
@@ -134,7 +149,7 @@ const MInfoScreen = () => {
             }}>
             <ScrollView
               contentContainerStyle={styles.menuContainer}
-              overScrollMode='never'
+              overScrollMode="never"
               stickyHeaderIndices={[0]}>
               <View style={styles.header}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -160,14 +175,16 @@ const MInfoScreen = () => {
                 };
 
                 return (
-                  <>
+                  <React.Fragment key={item.key}>
                     <TouchableOpacity
-                      key={item.label}
                       style={[
                         styles.menuItem,
                         item.type === 'section' && sectionStyle.container,
                       ]}
-                      onPress={() => item.label === 'Info Saldo' && openModal}
+                      disabled={item.type === 'section'}
+                      onPress={() =>
+                        item.key === 'info_saldo_rekening' && openModal()
+                      }
                       activeOpacity={0.7}>
                       <Text
                         style={{
@@ -188,7 +205,7 @@ const MInfoScreen = () => {
                         <View style={styles.subMenuContainer}>
                           {item.submenus.map(submenu => (
                             <TouchableOpacity
-                              key={submenu.label}
+                              key={`${item.key}-${submenu.key}`}
                               style={styles.subMenuItem}>
                               <Text style={styles.subMenuText}>
                                 {submenu.label}
@@ -201,7 +218,7 @@ const MInfoScreen = () => {
                           ))}
                         </View>
                       )}
-                  </>
+                  </React.Fragment>
                 );
               })}
             </ScrollView>
@@ -271,12 +288,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   headerImage: {
-    width: 65,
-    height: 65,
+    width: 55,
+    height: 55,
     marginRight: 8,
   },
   headerText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#005BAC',
   },
@@ -292,7 +309,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 40,
-    // paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
@@ -310,7 +326,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 30,
-    // paddingVertical: 8,
     paddingRight: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',

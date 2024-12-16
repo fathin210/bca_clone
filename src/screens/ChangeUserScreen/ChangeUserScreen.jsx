@@ -1,31 +1,29 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
-  Modal,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {useAuth} from '../contexts/AuthContext';
+import {useAuth, useLock} from '../../contexts/AuthContext';
+import ModalChange from './ModalChange';
 
 const ChangeUserScreen = () => {
   const {updateUserName, updateNoRekening} = useAuth();
 
+  const {setLockDate} = useLock();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const [inputValue, setInputValue] = useState('');
 
-  const handleModalSubmit = async () => {
-    if (inputValue) {
+  const handleModalSubmit = async data => {
+    if (data) {
       const functionUpdate =
-        modalType === 'user' ? updateUserName : updateNoRekening;
+        modalType === 'user'
+          ? updateUserName
+          : modalType === 'rek'
+          ? updateNoRekening
+          : setLockDate;
 
-      await functionUpdate(inputValue);
+      await functionUpdate(data);
 
       setModalVisible(false);
-      setInputValue('');
     }
   };
 
@@ -87,7 +85,12 @@ const ChangeUserScreen = () => {
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.modalButton} onPress={() => {}}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => {
+              setModalType('limit');
+              setModalVisible(true);
+            }}>
             <LinearGradient
               style={styles.modalButtonGradient}
               colors={['#1696E6', '#02387F']}>
@@ -96,41 +99,16 @@ const ChangeUserScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {modalType === 'user'
-                ? 'Masukkan Nama User'
-                : 'Masukkan No Rekening'}
-            </Text>
-            <TextInput
-              style={styles.modalInput}
-              placeholder={modalType === 'user' ? 'Nama User' : 'No Rekening'}
-              value={inputValue}
-              onChangeText={setInputValue}
-              keyboardType={modalType === 'rek' ? 'numeric' : 'default'}
-            />
-            <View style={styles.modalActions}>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={() => setModalVisible(false)}>
-                <Text style={styles.actionButtonText}>Batal</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.actionButton}
-                onPress={handleModalSubmit}>
-                <Text style={styles.actionButtonText}>OK</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      {modalVisible && (
+        <ModalChange
+          {...{
+            modalType,
+            modalVisible,
+            setModalVisible,
+            handleModalSubmit,
+          }}
+        />
+      )}
     </View>
   );
 };

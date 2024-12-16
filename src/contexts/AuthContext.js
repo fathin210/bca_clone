@@ -1,16 +1,25 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 
+// AuthContext
 export const AuthContext = createContext();
+
+// LockContext
+export const LockContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [userName, setUserName] = useState('');
-  const [userPin, setUserPin] = useState(null);
+  const [userPin, setUserPin] = useState('');
   const [noRekening, setNoRekening] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const [isLocked, setIsLocked] = useState(false);
+  const [limitDate, setLimitDate] = useState(new Date());
+
+  // Load user data from AsyncStorage
   const loadUserData = async () => {
     try {
       const loginStatus = await AsyncStorage.getItem('isLogin');
@@ -34,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Save user data to AsyncStorage
   const saveUserData = async (newSaldo, newUserName, newUserPin, newNoRekening) => {
     try {
       await AsyncStorage.setItem('saldo', newSaldo.toString());
@@ -45,40 +55,47 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    loadUserData();
-  }, []);
-
+  // Check if the user is logged in
   const login = async (pin) => {
+    if (isLocked) {
+      alert('Akun terkunci. Anda tidak dapat login.');
+      return false;
+    }
+
     if (userPin === pin) {
       await AsyncStorage.setItem('isLogin', 'true');
       setIsLogin(true);
-      return true
+      return true;
     } else {
       console.log('Pin salah');
       alert('Pin salah. Coba lagi.');
-      return false
+      return false;
     }
   };
 
+  // Logout the user
   const logout = async () => {
     await AsyncStorage.setItem('isLogin', 'false');
     setIsLogin(false);
   };
 
+  // Update saldo
   const updateSaldo = (newSaldo) => {
     setSaldo(newSaldo);
     saveUserData(newSaldo, userName, userPin, noRekening);
   };
 
+  // Update user information
   const updateUserName = (newName) => {
     setUserName(newName);
     saveUserData(saldo, newName, userPin, noRekening);
   };
 
   const updateUserPin = (newPin) => {
-    setUserPin(newPin);
-    saveUserData(saldo, userName, newPin, noRekening);
+    if (!isLocked) {
+      setUserPin(newPin);
+      saveUserData(saldo, userName, newPin, noRekening);
+    }
   };
 
   const updateNoRekening = (newNoRekening) => {
@@ -86,11 +103,38 @@ export const AuthProvider = ({ children }) => {
     saveUserData(saldo, userName, userPin, newNoRekening);
   };
 
+  // Format saldo
   const formatSaldo = (saldo) => {
     return new Intl.NumberFormat('id-ID', {
       style: 'currency',
       currency: 'IDR',
     }).format(saldo);
+  };
+
+  // Lock status logic
+  const checkLockStatus = () => {
+    const today = moment();
+    const limit = moment(limitDate);
+    setIsLocked(today.isAfter(limit));
+  };
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  useEffect(() => {
+    checkLockStatus();
+  }, [limitDate]);
+
+  useEffect(() => {
+    if (isLocked) {
+      logout()
+    }
+  }, [isLocked])
+
+  const setLockDate = async (date) => {
+    setLimitDate(date);
+    await AsyncStorage.setItem('limitDate', moment(date).toString());
   };
 
   return (
@@ -111,9 +155,18 @@ export const AuthProvider = ({ children }) => {
         formatSaldo,
       }}
     >
-      {children}
+      <LockContext.Provider
+        value={{
+          isLocked,
+          limitDate,
+          setLockDate,
+        }}
+      >
+        {children}
+      </LockContext.Provider>
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+export const useLock = () => useContext(LockContext);
