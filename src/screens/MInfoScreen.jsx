@@ -132,7 +132,7 @@ const MInfoScreen = () => {
                 ...styles.headerText,
                 fontSize: 20,
                 textAlign: 'center',
-                width: '50%',
+                width: '70%',
               }}>
               m-Info
             </Text>

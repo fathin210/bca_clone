@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [saldo, setSaldo] = useState(0);
   const [userName, setUserName] = useState('');
-  const [userPin, setUserPin] = useState('');
+  const [userPin, setUserPin] = useState('pokermember');
   const [noRekening, setNoRekening] = useState('');
   const [loading, setLoading] = useState(true);
 
