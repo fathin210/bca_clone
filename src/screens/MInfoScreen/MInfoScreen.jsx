@@ -6,15 +6,12 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
-  Modal,
   ImageBackground,
 } from 'react-native';
 import React, {useState} from 'react';
-import LinearGradient from 'react-native-linear-gradient';
-import {useAuth} from '../contexts/AuthContext';
-import moment from 'moment';
-import InsetShadowBox from '../components/InsetShadowBox';
-import {useIndicator} from '../contexts/IndicatorContext';
+import InsetShadowBox from '../../components/InsetShadowBox';
+import {useIndicator} from '../../contexts/IndicatorContext';
+import ModalMInfo from './ModalMInfo';
 
 const {width, height} = Dimensions.get('window');
 
@@ -104,8 +101,6 @@ const MInfoScreen = () => {
   const openModal = () => setModalVisible(true);
   const closeModal = () => setModalVisible(false);
 
-  const {saldo, noRekening, formatSaldo} = useAuth();
-
   const {color} = useIndicator();
 
   return (
@@ -154,7 +149,7 @@ const MInfoScreen = () => {
               <View style={styles.header}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Image
-                    source={require('../assets/minfo/m-info.png')}
+                    source={require('../../assets/minfo/m-info.png')}
                     style={styles.headerImage}
                   />
                   <Text style={styles.headerText}>m-Info</Text>
@@ -195,7 +190,7 @@ const MInfoScreen = () => {
                       </Text>
                       {item.type === 'menu' && (
                         <Image
-                          source={require('../assets/icons/next-blue.png')}
+                          source={require('../../assets/icons/next-blue.png')}
                           style={styles.iconNext}
                         />
                       )}
@@ -211,7 +206,7 @@ const MInfoScreen = () => {
                                 {submenu.label}
                               </Text>
                               <Image
-                                source={require('../assets/icons/next-blue.png')}
+                                source={require('../../assets/icons/next-blue.png')}
                                 style={styles.iconNext}
                               />
                             </TouchableOpacity>
@@ -230,49 +225,15 @@ const MInfoScreen = () => {
           <ImageBackground
             style={{flex: 1}}
             resizeMode="cover"
-            source={require('../assets/home/bottom-menu.png')}
+            source={require('../../assets/home/bottom-menu.png')}
           />
         </View>
       </View>
 
       {/* Modal */}
-      <Modal
-        animationType="fade"
-        visible={modalVisible}
-        transparent
-        onRequestClose={closeModal}>
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <View style={{height: 50}}>
-              <Text
-                style={{
-                  ...styles.headerText,
-                  fontSize: 20,
-                  textAlign: 'center',
-                }}>
-                m-Info
-              </Text>
-            </View>
-            <View style={{flex: 1}}>
-              <View style={{marginBottom: 24}}>
-                <Text>m-Info:</Text>
-                <Text>{moment(Date.now()).format('DD/MM/YYYY HH:mm:ss')}</Text>
-              </View>
-              <Text>{`${noRekening ? noRekening : 'REKENING TIDAK DITEMUKAN'} ${
-                saldo ? formatSaldo(saldo) : 'Rp. 0,00'
-              }`}</Text>
-            </View>
-
-            <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
-              <LinearGradient
-                style={styles.modalButtonGradient}
-                colors={['#1696E6', '#02387F']}>
-                <Text style={styles.modalButtonText}>OK</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {modalVisible && (
+        <ModalMInfo modalVisible={modalVisible} closeModal={closeModal} />
+      )}
     </>
   );
 };

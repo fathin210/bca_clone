@@ -5,7 +5,7 @@ import FrontScreen from '../screens/FrontScreen';
 import HomeScreen from '../screens/HomeScreen';
 import {useAuth, useLock} from '../contexts/AuthContext';
 import {ActivityIndicator, View} from 'react-native';
-import MInfoScreen from '../screens/MInfoScreen';
+import MInfoScreen from '../screens/MInfoScreen/MInfoScreen';
 import ChangeCodeScreen from '../screens/ChangeCodeScreen';
 import ChangeUserScreen from '../screens/ChangeUserScreen/ChangeUserScreen';
 import ChangeSaldoScreen from '../screens/ChangeSaldoScreen';
