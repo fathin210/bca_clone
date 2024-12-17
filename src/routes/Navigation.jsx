@@ -7,6 +7,7 @@ import {ActivityIndicator, View} from 'react-native';
 import BottomTabs from '../components/BottomTabs';
 import ChangeCodeScreen from '../screens/ChangeCodeScreen';
 import ChangeSaldoScreen from '../screens/ChangeSaldoScreen';
+import ChangeUserScreen from '../screens/ChangeUserScreen/ChangeUserScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,13 @@ const Navigation = () => {
         <Stack.Screen
           name="HomeTabs"
           component={BottomTabs}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Change User"
+          component={ChangeUserScreen}
           options={{
             headerShown: false,
           }}
