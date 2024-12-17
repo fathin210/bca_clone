@@ -85,9 +85,6 @@ const ChangeSaldoScreen = () => {
             </Text>
             <TextInput
               style={styles.modalInput}
-              placeholder={
-                modalType === 'saldo' ? 'Saldo (Contoh: 100000)' : ''
-              }
               value={inputValue}
               onChangeText={text => {
                 if (modalType === 'saldo') {
