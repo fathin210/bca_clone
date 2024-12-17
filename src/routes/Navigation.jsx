@@ -2,19 +2,16 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FrontScreen from '../screens/FrontScreen';
-import HomeScreen from '../screens/HomeScreen';
 import {useAuth, useLock} from '../contexts/AuthContext';
 import {ActivityIndicator, View} from 'react-native';
-import MInfoScreen from '../screens/MInfoScreen/MInfoScreen';
+import BottomTabs from '../components/BottomTabs';
 import ChangeCodeScreen from '../screens/ChangeCodeScreen';
-import ChangeUserScreen from '../screens/ChangeUserScreen/ChangeUserScreen';
 import ChangeSaldoScreen from '../screens/ChangeSaldoScreen';
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
   const {isLogin, loading} = useAuth();
-
   const {isLocked} = useLock();
 
   if (loading) {
@@ -37,15 +34,8 @@ const Navigation = () => {
           }}
         />
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="M-Info"
-          component={MInfoScreen}
+          name="HomeTabs"
+          component={BottomTabs}
           options={{
             headerShown: false,
           }}
@@ -53,13 +43,6 @@ const Navigation = () => {
         <Stack.Screen
           name="Change Code"
           component={ChangeCodeScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Change User"
-          component={ChangeUserScreen}
           options={{
             headerShown: false,
           }}

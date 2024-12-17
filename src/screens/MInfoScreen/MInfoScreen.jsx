@@ -219,15 +219,6 @@ const MInfoScreen = () => {
             </ScrollView>
           </View>
         </View>
-
-        {/* Footer */}
-        <View style={{flex: 1, width: '100%', backgroundColor: '#F1F1F1'}}>
-          <ImageBackground
-            style={{flex: 1}}
-            resizeMode="cover"
-            source={require('../../assets/home/bottom-menu.png')}
-          />
-        </View>
       </View>
 
       {/* Modal */}

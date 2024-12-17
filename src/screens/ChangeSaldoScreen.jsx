@@ -46,7 +46,7 @@ const ChangeSaldoScreen = () => {
           backgroundColor: '#002344',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingVertical: 16,
+          paddingVertical: 24,
         }}>
         <View
           style={{

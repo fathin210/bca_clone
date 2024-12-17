@@ -100,42 +100,51 @@ const HomeScreen = () => {
                 label="m-Transfer"
                 onPress={() => navigation.navigate('Change Saldo')}
                 imageUri={require('../assets/home/m-transfer.png')}
+                disabled
               />
               <MenuItem
                 label="m-Payment"
                 imageUri={require('../assets/home/m-payment.png')}
+                disabled
               />
               <MenuItem
                 label="m-Commerce"
                 imageUri={require('../assets/home/m-commerce.png')}
+                disabled
               />
             </View>
             <View style={styles.row}>
               <MenuItem
                 label="Cardless"
                 imageUri={require('../assets/home/cardless.png')}
+                disabled
               />
               <MenuItem
                 label="m-Admin"
                 imageUri={require('../assets/home/m-admin.png')}
+                disabled
               />
               <MenuItem
                 label="BCA Keyboard"
                 imageUri={require('../assets/home/bca-keyboard.png')}
+                disabled
               />
               <MenuItem
                 label="Flazz"
                 imageUri={require('../assets/home/flazz.png')}
+                disabled
               />
             </View>
             <View style={styles.row}>
               <MenuItem
                 label="BagiBagi"
                 imageUri={require('../assets/home/bagi-bagi.png')}
+                disabled
               />
               <MenuItem
                 label="Lifestyle"
                 imageUri={require('../assets/home/lifestyle.png')}
+                disabled
                 />
               <MenuItem
                 label="Lifestyle"
@@ -150,13 +159,6 @@ const HomeScreen = () => {
                 style={{opacity: 0}}
               />
             </View>
-          </View>
-          <View style={{flex: 1, width: '100%', backgroundColor: '#F1F1F1'}}>
-            <ImageBackground
-              style={{flex: 1}}
-              resizeMode="cover"
-              source={require('../assets/home/bottom-menu.png')}
-            />
           </View>
         </View>
       </View>
