@@ -109,10 +109,10 @@ export const AuthProvider = ({ children }) => {
 
   // Format saldo
   const formatSaldo = (saldo) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-    }).format(saldo);
+    return `${new Intl.NumberFormat('id-ID', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(saldo)}`;
   };
 
   // Lock status logic

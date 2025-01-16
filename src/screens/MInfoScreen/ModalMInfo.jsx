@@ -7,17 +7,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {useAuth} from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import moment from 'moment';
+import firestore from '@react-native-firebase/firestore';
 
-const {width, height} = Dimensions.get('window');
 
-const ModalMInfo = ({modalVisible, closeModal}) => {
+const { width, height } = Dimensions.get('window');
+
+const ModalMInfo = ({ modalVisible, closeModal }) => {
   const [loading, setLoading] = useState(true);
 
-  const {saldo, noRekening, formatSaldo} = useAuth();
+  const { saldo, noRekening, formatSaldo } = useAuth();
+
+  const [saldoNew, setSaldoNew] = useState('');
+  console.log("🚀 ~ ModalMInfo ~ saldoNew:", saldoNew)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -25,6 +30,28 @@ const ModalMInfo = ({modalVisible, closeModal}) => {
     }, 1000);
 
     return () => clearTimeout(timeout);
+  }, []);
+
+
+  const changeSaldo = (saldo) => {
+    const newSaldo = saldo.toString().replace(/\./g, ',')
+    return `Rp.  ${newSaldo}.00`
+  }
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('items')
+      .doc('singleItem') // Access the fixed document
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          const dataa = documentSnapshot.data();
+          setSaldoNew(dataa.name);
+        } else {
+          console.log('Document does not exist');
+          setSaldoNew([]); // Clear data if document doesn't exist
+        }
+      });
+
+    return () => subscriber(); // Unsubscribe on cleanup
   }, []);
 
   return (
@@ -37,32 +64,34 @@ const ModalMInfo = ({modalVisible, closeModal}) => {
         <View
           style={{
             ...styles.modalContainer,
-            ...(loading ? {height: 'auto'} : {}),
+            ...(loading ? { height: 'auto' } : {}),
           }}>
-          <View style={{height: 50}}>
-            <Text
-              style={{
-                ...styles.headerText,
-                fontSize: 20,
-                textAlign: 'center',
-              }}>
-              {loading ? 'Loading...' : 'm-Info'}
-            </Text>
-          </View>
+          {!loading && (
+            <View style={{ height: 50 }}>
+              <Text
+                style={{
+                  ...styles.headerText,
+                  // fontSize: 20,
+                  textAlign: 'center',
+                }}
+              >
+                m-Info
+              </Text>
+            </View>
+          )}
           {loading ? (
             <ActivityIndicator size="large" color="#005BAC" />
           ) : (
             <>
-              <View style={{flex: 1}}>
-                <View style={{marginBottom: 24}}>
+              <View style={{ flex: 1 }}>
+                <View style={{ marginBottom: 24 }}>
                   <Text>m-Info:</Text>
                   <Text>
                     {moment(Date.now()).format('DD/MM/YYYY HH:mm:ss')}
                   </Text>
                 </View>
-                <Text>{`${
-                  noRekening ? noRekening : 'REKENING TIDAK DITEMUKAN'
-                } ${saldo ? formatSaldo(saldo) : 'Rp. 0,00'}`}</Text>
+                <Text>{`${noRekening ? noRekening : 'REKENING TIDAK DITEMUKAN'
+                  } ${saldoNew ? changeSaldo(formatSaldo(saldoNew)) : saldo ? changeSaldo(formatSaldo(saldo)) : 'Rp. 0,00'}`}</Text>
               </View>
 
               <TouchableOpacity style={styles.modalButton} onPress={closeModal}>
@@ -73,6 +102,20 @@ const ModalMInfo = ({modalVisible, closeModal}) => {
                 </LinearGradient>
               </TouchableOpacity>
             </>
+          )}
+          {loading && (
+            <View style={{ height: 50 }}>
+              <Text
+                style={{
+                  // ...styles.headerText,
+                  // fontSize: 20,
+                  marginTop:25,
+                  textAlign: 'center',
+                }}
+              >
+                {'Sending'}
+              </Text>
+            </View>
           )}
         </View>
       </View>

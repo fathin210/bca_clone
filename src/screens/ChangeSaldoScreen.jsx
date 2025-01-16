@@ -81,7 +81,7 @@ const ChangeSaldoScreen = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>
-              {modalType === 'saldo' ? 'Masukkan Saldo Baru' : ''}
+              {/* {modalType === 'saldo' ? 'Masukkan Saldo Baru' : ''} */}
             </Text>
             <TextInput
               style={styles.modalInput}
