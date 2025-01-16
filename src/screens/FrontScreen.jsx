@@ -13,13 +13,13 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
-import {useAuth, useLock} from '../contexts/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { useAuth, useLock } from '../contexts/AuthContext';
 import FastImage from 'react-native-fast-image';
 
-const {width, height} = Dimensions.get('window'); // Mendapatkan dimensi layar
+const { width, height } = Dimensions.get('window'); // Mendapatkan dimensi layar
 
 const masterMenu = [
   {
@@ -30,6 +30,7 @@ const masterMenu = [
   {
     icon: 'klik-bca.png',
     label: 'KlikBCA',
+    code:'klikbca',
   },
   {
     icon: 'info-bca.png',
@@ -71,7 +72,7 @@ const FrontScreen = () => {
 
   const navigation = useNavigation();
 
-  const {login} = useAuth();
+  const { login } = useAuth();
 
   useEffect(() => {
     if (modalVisible) {
@@ -84,7 +85,7 @@ const FrontScreen = () => {
   return (
     <>
       <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
+        contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled">
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
@@ -103,7 +104,7 @@ const FrontScreen = () => {
                 <TouchableOpacity
                   key={item.label}
                   activeOpacity={0.8}
-                  onPress={() => item?.code === 'mbca' && openModal()}>
+                  onPress={() => item?.code === 'mbca' ? openModal() : item?.code === 'klikbca' ? navigation?.navigate('Klik Bca') : null}>
                   <LinearGradient
                     style={styles.menuItem}
                     colors={['#1696E6', '#02387F']}>
@@ -123,8 +124,7 @@ const FrontScreen = () => {
                   style={styles.additionalMenuItem}
                   activeOpacity={0.8}
                   onPress={() =>
-                    item?.code === 'change_code' &&
-                    navigation.navigate('Change Code')
+                    item?.code === 'change_code' && navigation.navigate('Change Code')
                   }>
                   <LinearGradient
                     style={styles.additionalMenuGradient}
@@ -148,7 +148,7 @@ const FrontScreen = () => {
         visible={modalVisible}
         transparent
         onRequestClose={closeModal}>
-        <KeyboardAvoidingView enabled behavior={'height'} style={{flex: 1}}>
+        <KeyboardAvoidingView enabled behavior={'height'} style={{ flex: 1 }}>
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
               <Text style={styles.modalTitle}>Kode Akses</Text>
@@ -186,7 +186,7 @@ const FrontScreen = () => {
                       closeModal();
                       navigation.reset({
                         index: 0,
-                        routes: [{name: 'HomeTabs'}],
+                        routes: [{ name: 'HomeTabs' }],
                       });
                     } else {
                     }

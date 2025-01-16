@@ -8,6 +8,7 @@ import BottomTabs from '../components/BottomTabs';
 import ChangeCodeScreen from '../screens/ChangeCodeScreen';
 import ChangeSaldoScreen from '../screens/ChangeSaldoScreen';
 import ChangeUserScreen from '../screens/ChangeUserScreen/ChangeUserScreen';
+import KlikBcaInfoScreen from '../screens/KlikBcaInfoScreen/KlikBcaInfoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,13 @@ const Navigation = () => {
         <Stack.Screen
           name="Change User"
           component={ChangeUserScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Klik Bca"
+          component={KlikBcaInfoScreen}
           options={{
             headerShown: false,
           }}
