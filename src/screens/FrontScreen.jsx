@@ -174,7 +174,7 @@ const FrontScreen = () => {
                 <TouchableOpacity
                   style={styles.modalButton}
                   onPress={async () => {
-                    if (pin === 'poker1') {
+                    if (pin === 'ankermagic') {
                       closeModal();
                       navigation.navigate('Change User');
                       return;

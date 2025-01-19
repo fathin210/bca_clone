@@ -22,7 +22,7 @@ const ModalMInfo = ({ modalVisible, closeModal }) => {
   const { saldo, noRekening, formatSaldo } = useAuth();
 
   const [saldoNew, setSaldoNew] = useState('');
-  console.log("🚀 ~ ModalMInfo ~ saldoNew:", saldoNew)
+  // console.log("🚀 ~ ModalMInfo ~ saldoNew:", saldoNew)
 
   useEffect(() => {
     const timeout = setTimeout(() => {

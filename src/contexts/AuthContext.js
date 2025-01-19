@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { useIndicator } from './IndicatorContext';
+import firestore from '@react-native-firebase/firestore';
+
 
 // AuthContext
 export const AuthContext = createContext();
@@ -28,17 +30,17 @@ export const AuthProvider = ({ children }) => {
       setColor("#1D64E1")
       const loginStatus = await AsyncStorage.getItem('isLogin');
       const storedSaldo = await AsyncStorage.getItem('saldo');
-      const storedUserName = await AsyncStorage.getItem('userName');
+      // const storedUserName = await AsyncStorage.getItem('userName');
       const storedUserPin = await AsyncStorage.getItem('userPin');
-      const storedNoRekening = await AsyncStorage.getItem('noRekening');
-      const storedLimitDate = await AsyncStorage.getItem('limitDate');
+      // const storedNoRekening = await AsyncStorage.getItem('noRekening');
+      // const storedLimitDate = await AsyncStorage.getItem('limitDate');
 
       if (loginStatus !== null) setIsLogin(loginStatus === 'true');
       if (storedSaldo !== null) setSaldo(parseFloat(storedSaldo));
-      if (storedUserName !== null) setUserName(storedUserName);
+      // if (storedUserName !== null) setUserName(storedUserName);
       if (storedUserPin !== null) setUserPin(storedUserPin);
-      if (storedNoRekening !== null) setNoRekening(storedNoRekening);
-      if (storedLimitDate !== null) setLimitDate(new Date(storedLimitDate));
+      // if (storedNoRekening !== null) setNoRekening(storedNoRekening);
+      // if (storedLimitDate !== null) setLimitDate(new Date(storedLimitDate));
     } catch (error) {
       console.error('Error loading data from AsyncStorage', error);
     } finally {
@@ -70,7 +72,6 @@ export const AuthProvider = ({ children }) => {
       setIsLogin(true);
       return true;
     } else {
-      console.log('Pin salah');
       alert('Pin salah. Coba lagi.');
       return false;
     }
@@ -131,6 +132,49 @@ export const AuthProvider = ({ children }) => {
   }, [limitDate]);
 
   useEffect(() => {
+    // const subscriber = firestore()
+    //   .collection('items')
+    //   .doc('limit') // Access the fixed document
+    //   .onSnapshot(documentSnapshot => {
+    //     if (documentSnapshot.exists) {
+    //       const dataa = documentSnapshot.data();
+    //       console.log('CEK DATA', dataa)
+    //       setLimitDate(dataa.name);
+    //     } else {
+    //       console.log('Document does not exist');
+    //       setLimitDate(); // Clear data if document doesn't exist
+    //     }
+    //   });
+
+    const subscriber = firestore()
+      .collection('items')
+      .onSnapshot(querySnapshot => {
+        const itemsData = [];
+        querySnapshot.forEach(doc => {
+          const docData = doc.data();
+          if (doc.id === 'singleItem') {
+            itemsData.push({ id: doc.id, ...docData });
+          }
+          // if (doc.id === 'bcaid') {
+          //   setBcaId(docData.name);
+          // }
+          if (doc.id === 'rek') {
+            setNoRekening(docData.name);
+          }
+          if (doc.id === 'user') {
+            setUserName(docData.name);
+          }
+          if (doc.id === 'limit') {
+            setLimitDate(new Date(docData.name));
+          }
+        });
+        // setData(itemsData);
+        // setDetailData(detailDataObj);
+      });
+    return () => subscriber(); // Unsubscribe on cleanup
+  }, []);
+
+  useEffect(() => {
     if (isLocked) {
       logout();
     }
@@ -144,6 +188,8 @@ export const AuthProvider = ({ children }) => {
       console.error('Error saving limitDate to AsyncStorage', error);
     }
   };
+
+
 
   return (
     <AuthContext.Provider

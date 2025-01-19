@@ -59,7 +59,8 @@ export default function BottomTabs() {
       {/* Transaksi Screen */}
       <Tab.Screen
         name="Transaksi"
-        component={ChangeSaldoScreen}
+        // component={ChangeSaldoScreen}
+        component={DisabledScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -72,7 +73,13 @@ export default function BottomTabs() {
               style={styles.icon}
             />
           ),
+          tabBarButton: props => (
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.disabledTab}>{props.children}</View>
+            </TouchableWithoutFeedback>
+          ),
         }}
+        
       />
 
       {/* QRIS Disabled */}
