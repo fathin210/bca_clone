@@ -536,27 +536,35 @@ const KlikBCA = () => {
                   <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
                     <View
                       style={{flex: 1, backgroundColor: '#eaeaea', padding: 4}}>
-                      <Text style={{color: '#4F53B6', fontWeight: '700'}}>
+                      <Text style={{color: '#4F53B6', fontWeight: '700', fontSize: 12}}>
                         REKENING
                       </Text>
                     </View>
                     <View
                       style={{flex: 1, backgroundColor: '#eaeaea', padding: 4}}>
-                      <Text style={{color: '#4F53B6', fontWeight: '700'}}>
+                      <Text style={{color: '#4F53B6', fontWeight: '700', fontSize: 12}}>
                         SALDO EFEKTIF
                       </Text>
                     </View>
                   </View>
                   <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-                    <View style={{flex: 1}}>
-                      <Text
+                    <View
                         style={{
-                          color: '#4F53B6',
-                          fontWeight: '700',
-                          fontSize: 12,
+                          flex: 1,
+                          padding: 4,
+                          display: 'flex',
+                          flexDirection: 'row',
                         }}>
-                        {noRekening}
-                      </Text>
+                      <View style={{flex: 1}}>
+                        <Text
+                          style={{
+                            color: '#4F53B6',
+                            fontWeight: '700',
+                            fontSize: 10,
+                          }}>
+                          {noRekening}
+                        </Text>
+                      </View>
                     </View>
                     <View
                       style={{
@@ -570,17 +578,18 @@ const KlikBCA = () => {
                           style={{
                             color: '#4F53B6',
                             fontWeight: '700',
-                            fontSize: 12,
+                            fontSize: 10,
                           }}>
                           IDR
                         </Text>
                       </View>
-                      <View style={{flex: 2}}>
+                      <View style={{flex: 5}}>
                         <Text
                           style={{
                             color: '#4F53B6',
                             fontWeight: '700',
-                            fontSize: 12,
+                            fontSize: 10,
+                            textAlign: 'right',
                           }}>
                           {saldoNew ? changeSaldo(formatSaldo(saldoNew)) : saldo ? changeSaldo(formatSaldo(saldo)) : 'Rp. 0,00'}
                         </Text>
