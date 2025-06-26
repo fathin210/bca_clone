@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     marginBottom: 20,
+    color:'black',
   },
   modalActions: {
     flexDirection: 'row',

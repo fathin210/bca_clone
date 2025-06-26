@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     fontSize: 16,
     backgroundColor: 'white',
+    color:'black',
   },
   icon: {
     width: 16,

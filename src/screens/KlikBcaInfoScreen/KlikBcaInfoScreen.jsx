@@ -246,7 +246,7 @@ const KlikBCA = () => {
                   style={styles.input}
                   onChangeText={text => setInputUserId(text)}
                 />
-                <Text style={[styles.label, {marginTop: 10}]}>
+                <Text style={[styles.label, {marginTop: 10,}]}>
                   Silakan masukkan PIN Internet Banking Anda
                 </Text>
                 <Text style={styles.subLabel}>
@@ -435,7 +435,7 @@ const KlikBCA = () => {
                     }}>
                     <TouchableOpacity style={{marginBottom: 5}}>
                       <Text style={{color: '#4F53B6', fontWeight: '700'}}>
-                        Mutasi Rekaning
+                        Mutasi Rekening
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -465,7 +465,7 @@ const KlikBCA = () => {
                             fontWeight: '700',
                             marginLeft: 20,
                           }}>
-                          Infromasi Saldo RDN
+                          Informasi Saldo RDN
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -715,6 +715,7 @@ const styles = StyleSheet.create({
     width: '65%',
     backgroundColor: '#ffffff',
     paddingVertical: 2,
+    color:'black',
   },
   loginButton: {
     marginTop: 20,
