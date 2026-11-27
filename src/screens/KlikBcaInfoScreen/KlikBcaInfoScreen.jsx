@@ -14,7 +14,8 @@ import {
 } from 'react-native';
 import {useAuth} from '../../contexts/AuthContext';
 import firestore from '@react-native-firebase/firestore';
-
+import moment from 'moment';
+import {useNavigation} from '@react-navigation/native';
 
 const KlikBCA = () => {
   const [url, setUrl] = useState('');
@@ -23,21 +24,20 @@ const KlikBCA = () => {
   const [inputPin, setInputPin] = useState('');
   const [loading, setLoading] = useState(true);
   const [saldoNew, setSaldoNew] = useState('');
-
+  const {noRekening, formatSaldo} = useAuth();
   const [progress, setProgress] = useState(0); // Optional: To show percentage
   const animatedWidth = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const subscriber = firestore()
-      .collection('items')
-      .doc('singleItem') // Access the fixed document
+      .collection('mandiri')
+      .doc(noRekening)
       .onSnapshot(documentSnapshot => {
         if (documentSnapshot.exists) {
           const dataa = documentSnapshot.data();
-          setSaldoNew(dataa.name);
+          setSaldoNew(dataa.saldo);
         } else {
           console.log('Document does not exist');
-          setSaldoNew([]); // Clear data if document doesn't exist
         }
       });
 
@@ -84,10 +84,37 @@ const KlikBCA = () => {
   const handleInformasi = () => {
     setUrl('informasi');
   };
-  const {saldo, noRekening, formatSaldo} = useAuth();
 
   const [popUpConfirm, setPopUpConfirm] = useState(false);
   const [informasiConfirm, setInformasiConfirm] = useState('');
+  const navigation = useNavigation();
+
+  // const subscriber = () => {
+  //   firestore()
+  //     .collection('mandiri')
+  //     .doc(noRekening)
+  //     .onSnapshot(documentSnapshot => {
+  //       if (documentSnapshot.exists) {
+  //         const dataa = documentSnapshot.data();
+  //         const limitDb = moment(dataa.limit);
+  //         const limitLocal = moment();
+  //         console.log('DATA',dataa)
+  //         console.log('Masuk sini123', limitDb, limitLocal);
+  //         console.log('Document data123:', dataa);
+  //         if (limitDb.isBefore(limitLocal)) {
+  //           alert('Akun Anda Terkunci, Silakan login kembali');
+  //           navigation.reset({
+  //             index: 0,
+  //             routes: [{name: 'Front'}],
+  //           });
+  //         } else {
+  //           console.log('Limit date is after lock date');
+  //         }
+  //       } else {
+  //         console.log('Document does not exist');
+  //       }
+  //     });
+  // };
 
   const onPressBtnLogin = () => {
     if (inputPin.length == 0 && inputUserId.length == 0) {
@@ -103,14 +130,15 @@ const KlikBCA = () => {
     } else if (inputPin.length === 0) {
       setPopUpConfirm();
       setInformasiConfirm('Silahkan mengisi PIN anda/Please input your PIN');
-    }else if (!Boolean(Number(inputPin))){
-        setPopUpConfirm();
-        setInformasiConfirm('PIN Harus angka');
+    } else if (!Boolean(Number(inputPin))) {
+      setPopUpConfirm();
+      setInformasiConfirm('PIN Harus angka');
     } else if (inputPin.length < 6) {
-        setPopUpConfirm();
-        setInformasiConfirm('PIN Kurang dari 6');
-    }else{
-        setUrl('autthentication');
+      setPopUpConfirm();
+      setInformasiConfirm('PIN Kurang dari 6');
+    } else {
+      subscriber();
+      setUrl('autthentication');
     }
   };
 
@@ -120,11 +148,35 @@ const KlikBCA = () => {
   };
 
   const onPressLogout = () => {
-    setDetail(false)
-    setUrl('login.jsp')
-    setInputUserId('')
-    setInputPin('')
-  }
+    setDetail(false);
+    setUrl('login.jsp');
+    setInputUserId('');
+    setInputPin('');
+  };
+
+  const subscriber = () => {
+    firestore()
+      .collection('mandiri')
+      .doc(noRekening)
+      .onSnapshot(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          const dataa = documentSnapshot.data();
+          const limitDb = moment(dataa.limit);
+          const limitLocal = moment();
+          if (limitDb.isBefore(limitLocal)) {
+            alert('Akun Anda Terkunci, Silakan login kembali');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Front'}],
+            });
+          } else {
+            console.log('Limit date is after lock date');
+          }
+        } else {
+          console.log('Document does not exist');
+        }
+      });
+  };
   return (
     <ScrollView style={styles.container}>
       <View
@@ -246,7 +298,7 @@ const KlikBCA = () => {
                   style={styles.input}
                   onChangeText={text => setInputUserId(text)}
                 />
-                <Text style={[styles.label, {marginTop: 10,}]}>
+                <Text style={[styles.label, {marginTop: 10}]}>
                   Silakan masukkan PIN Internet Banking Anda
                 </Text>
                 <Text style={styles.subLabel}>
@@ -536,25 +588,35 @@ const KlikBCA = () => {
                   <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
                     <View
                       style={{flex: 1, backgroundColor: '#eaeaea', padding: 4}}>
-                      <Text style={{color: '#4F53B6', fontWeight: '700', fontSize: 12}}>
+                      <Text
+                        style={{
+                          color: '#4F53B6',
+                          fontWeight: '700',
+                          fontSize: 12,
+                        }}>
                         REKENING
                       </Text>
                     </View>
                     <View
                       style={{flex: 1, backgroundColor: '#eaeaea', padding: 4}}>
-                      <Text style={{color: '#4F53B6', fontWeight: '700', fontSize: 12}}>
+                      <Text
+                        style={{
+                          color: '#4F53B6',
+                          fontWeight: '700',
+                          fontSize: 12,
+                        }}>
                         SALDO EFEKTIF
                       </Text>
                     </View>
                   </View>
                   <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
                     <View
-                        style={{
-                          flex: 1,
-                          padding: 4,
-                          display: 'flex',
-                          flexDirection: 'row',
-                        }}>
+                      style={{
+                        flex: 1,
+                        padding: 4,
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}>
                       <View style={{flex: 1}}>
                         <Text
                           style={{
@@ -591,7 +653,9 @@ const KlikBCA = () => {
                             fontSize: 10,
                             textAlign: 'right',
                           }}>
-                          {saldoNew ? changeSaldo(formatSaldo(saldoNew)) : saldo ? changeSaldo(formatSaldo(saldo)) : 'Rp. 0,00'}
+                          {saldoNew
+                            ? changeSaldo(formatSaldo(saldoNew))
+                            : 'Rp. 0,00'}
                         </Text>
                       </View>
                     </View>
@@ -639,9 +703,9 @@ const KlikBCA = () => {
         <KeyboardAvoidingView enabled behavior={'height'} style={{flex: 1}}>
           <View style={styles.modalBackground}>
             <View style={styles.modalContainer}>
-              <View style={{display:'flex', gap:20}}>
+              <View style={{display: 'flex', gap: 20}}>
                 <Text style={styles.modalTitle}>m.klikbca.com menyatakan</Text>
-                <Text style={{fontSize:12}}>{informasiConfirm}</Text>
+                <Text style={{fontSize: 12}}>{informasiConfirm}</Text>
               </View>
               <TouchableOpacity
                 style={styles.modalButton}
@@ -715,7 +779,7 @@ const styles = StyleSheet.create({
     width: '65%',
     backgroundColor: '#ffffff',
     paddingVertical: 2,
-    color:'black',
+    color: 'black',
   },
   loginButton: {
     marginTop: 20,

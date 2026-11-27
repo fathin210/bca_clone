@@ -19,10 +19,10 @@ const { width, height } = Dimensions.get('window');
 const ModalMInfo = ({ modalVisible, closeModal }) => {
   const [loading, setLoading] = useState(true);
 
-  const { saldo, noRekening, formatSaldo } = useAuth();
+  const { noRekening, formatSaldo } = useAuth();
+  console.log('No Rekening:', noRekening);
 
   const [saldoNew, setSaldoNew] = useState('');
-  // console.log("🚀 ~ ModalMInfo ~ saldoNew:", saldoNew)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -36,18 +36,21 @@ const ModalMInfo = ({ modalVisible, closeModal }) => {
   const changeSaldo = (saldo) => {
     const newSaldo = saldo.toString().replace(/\./g, ',')
     return `Rp.  ${newSaldo}.00`
-  }
+  };
+
   useEffect(() => {
+    console.log('Fetching saldo for rekening:', noRekening);
     const subscriber = firestore()
-      .collection('items')
-      .doc('singleItem') // Access the fixed document
+      .collection('mandiri')
+      .doc(noRekening)
       .onSnapshot(documentSnapshot => {
+        console.log('Document data:', documentSnapshot);
         if (documentSnapshot.exists) {
           const dataa = documentSnapshot.data();
-          setSaldoNew(dataa.name);
+          console.log('Document data:', dataa);
+          setSaldoNew(dataa.saldo);
         } else {
           console.log('Document does not exist');
-          setSaldoNew([]); // Clear data if document doesn't exist
         }
       });
 
@@ -91,7 +94,7 @@ const ModalMInfo = ({ modalVisible, closeModal }) => {
                   </Text>
                 </View>
                 <Text>{`${noRekening ? noRekening : 'REKENING TIDAK DITEMUKAN'
-                  } ${saldoNew ? changeSaldo(formatSaldo(saldoNew)) : saldo ? changeSaldo(formatSaldo(saldo)) : 'Rp. 0,00'}`}</Text>
+                  } ${saldoNew ? changeSaldo(formatSaldo(saldoNew)) : 'Rp. 0,00'}`}</Text>
               </View>
 
               <TouchableOpacity style={styles.modalButton} onPress={closeModal}>

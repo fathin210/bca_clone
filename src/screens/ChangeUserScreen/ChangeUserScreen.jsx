@@ -3,9 +3,11 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useAuth, useLock} from '../../contexts/AuthContext';
 import ModalChange from './ModalChange';
+import {useNavigation} from '@react-navigation/native';
 
 const ChangeUserScreen = () => {
   const {updateUserName, updateNoRekening} = useAuth();
+  const navigation = useNavigation();
 
   const {setLockDate} = useLock();
 
@@ -85,7 +87,7 @@ const ChangeUserScreen = () => {
             </LinearGradient>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.modalButton}
             onPress={() => {
               setModalType('limit');
@@ -96,7 +98,19 @@ const ChangeUserScreen = () => {
               colors={['#1696E6', '#02387F']}>
               <Text style={styles.modalButtonText}>Limit</Text>
             </LinearGradient>
+          </TouchableOpacity> */}
+           <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <LinearGradient
+              style={styles.modalButtonGradient}
+              colors={['#ff4141ff', '#f91c1cff']}>
+              <Text style={styles.modalButtonText}>Kembali</Text>
+            </LinearGradient>
           </TouchableOpacity>
+
         </View>
       </View>
       {modalVisible && (

@@ -27,7 +27,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isLocked ? 'Front' : isLogin ? 'Home' : 'Front'}>
+        initialRouteName={isLocked ? 'Front' : isLogin ? 'HomeTabs' : 'Front'}>
         <Stack.Screen
           name="Front"
           component={FrontScreen}

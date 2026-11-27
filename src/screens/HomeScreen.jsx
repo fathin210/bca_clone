@@ -5,7 +5,6 @@ import {
   useColorScheme,
   Image,
   TouchableOpacity,
-  ImageBackground,
   StyleSheet,
   Modal,
 } from 'react-native';
@@ -16,10 +15,12 @@ import InsetShadowBox from '../components/InsetShadowBox';
 import {useIndicator} from '../contexts/IndicatorContext';
 import SharpCornerRoundedSideBox from '../components/SharpCornerRoundedSideBox';
 import LinearGradient from 'react-native-linear-gradient';
+import firestore from '@react-native-firebase/firestore';
+import moment from 'moment';
 
 const HomeScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const { noRekening } = useAuth();
   const navigation = useNavigation();
 
   const {logout, userName} = useAuth();
@@ -37,12 +38,40 @@ const HomeScreen = () => {
     });
   };
 
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       changeToGreen()
     }, 5000);
 
     return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('mandiri')
+      .doc(noRekening)
+      .onSnapshot((documentSnapshot) => {
+        if (documentSnapshot.exists) {
+          const dataa = documentSnapshot.data();
+          const limitDb = moment(dataa.limit);
+          const limitLocal = moment();
+          if (limitDb.isBefore(limitLocal)) {
+            alert('Akun Anda Terkunci, Silakan login kembali');
+            logout();
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Front'}],
+            });
+          } else {
+            console.log('Limit date is after lock date');
+          }
+        } else {
+          console.log('Document does not exist');
+        }
+      });
+
+    return () => subscriber(); // Unsubscribe on cleanup
   }, []);
 
   return (
